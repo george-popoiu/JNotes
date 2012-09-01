@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
+import java.util.Random;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -34,7 +35,10 @@ public class Note extends JFrame {
 		
 		int sw = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int sh = Toolkit.getDefaultToolkit().getScreenSize().height;
-		setLocation(sw / 2 - dWidth/2, sh / 2 - dHeight / 2);	
+		Random rand = new Random();
+		int x = rand.nextInt(sw-dWidth);
+		int y = rand.nextInt(sh-dHeight);
+		setLocation(x, y);	
 		
 		buildGUI();
 	}
