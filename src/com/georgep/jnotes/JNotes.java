@@ -43,42 +43,7 @@ public class JNotes {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				File fprops = new File(PROPERTY_FILE);
-				Properties props;
-				if(!fprops.exists()) {
-					props = new Properties();
-					props.put(NOTES_KEY, "1");
-					try {
-						props.store(new FileOutputStream(fprops), "");
-					}
-					catch(Exception e) {
-						e.printStackTrace();
-						System.exit(0); 
-					}
-					
-					try {
-						PrintWriter pw = new PrintWriter(new File(NOTE_FILE_BASE + "1"));
-						pw.write("");
-						pw.close();
-					}
-					catch(Exception e) {
-						e.printStackTrace();
-						System.exit(0);
-					}					
-				}
-				
-				props = new Properties();
-				try {
-					props.load(new FileInputStream(fprops));
-					int notes = Integer.parseInt(props.getProperty(NOTES_KEY));
-					for(int i=1; i<=notes; i++) {
-						new Note(NOTE_FILE_BASE + i).setVisible(true);
-					}
-				}
-				catch(Exception e) {
-					e.printStackTrace();
-					System.exit(0);
-				}
+				//TODO load notes from the database and display them
 			}
 		});
 	}
