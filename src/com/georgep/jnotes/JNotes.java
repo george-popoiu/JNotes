@@ -11,6 +11,8 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import com.georgep.jnotes.db.DerbyConnection;
+
 public class JNotes {
 	/**
 	 * The filename of property file
@@ -44,6 +46,7 @@ public class JNotes {
 			@Override
 			public void run() {
 				//TODO load notes from the database and display them
+				DerbyConnection dc = new DerbyConnection();
 			}
 		});
 	}

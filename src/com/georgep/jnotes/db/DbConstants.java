@@ -25,4 +25,14 @@ public class DbConstants {
 	 * The database driver
 	 */
 	public static final String DB_DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
+	
+	/**
+	 * The id column
+	 */
+	public static final String ID_COLUMN = "ID";
+	
+	/**
+	 * Column for storing the note data
+	 */
+	public static final String TEXT_COLUMN = "TEXT";
 }

@@ -25,11 +25,25 @@ public class Note extends JFrame {
 	 */
 	protected static int dHeight = 300;
 	
+	private NoteModel model;
+	
 	/**
-	 * Builds the UI and loads the note.
-	 * @param noteName - the filename of the actual note
+	 * Builds the UI
+	 * @param model - the NoteModel corresponding to a note
 	 */
-	public Note(String noteName) {
+	public Note(NoteModel model) {
+		this(model.getID(), model.getText());
+		this.model = model;
+	}
+	
+	/**
+	 * Builds the UI
+	 * @param id - the note's id in the database
+	 * @param text - the note content
+	 */
+	public Note(int id, String text) {
+		model = new NoteModel(id, text);
+		
 		setSize(dWidth, dHeight);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
