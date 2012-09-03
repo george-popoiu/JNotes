@@ -12,20 +12,9 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import com.georgep.jnotes.db.DerbyConnection;
+import com.georgep.jnotes.db.NoteAdapter;
 
 public class JNotes {
-	/**
-	 * The filename of property file
-	 */
-	public static final String PROPERTY_FILE = "props";
-	/**
-	 *  The base filename for every file which is associated with every note
-	 */
-	public static final String NOTE_FILE_BASE = "note";
-	/**
-	 * The key for storing the current number of notes
-	 */
-	public static final String NOTES_KEY = "notes";
 
 	/**
 	 * Responsible for loading the existing notes and diplaying them
@@ -42,13 +31,27 @@ public class JNotes {
 		}
 		catch(Exception e) { }
 		
+		final DerbyConnection dc = new DerbyConnection();
+		final NoteAdapter na = new NoteAdapter(dc.getConnection());
+		
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				//TODO load notes from the database and display them
-				DerbyConnection dc = new DerbyConnection();
+				for(NoteModel model : na.getNotes()) {
+					new Note(model, na).setVisible(true);
+				}
 			}
 		});
-	}
+		
+		class ShutdownHook extends Thread {
+			@Override
+			public void run() {
+				na.saveNotes();
+				dc.closeConnection();
+			}
+		}
+		
+		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+	}		
 
 }
