@@ -25,15 +25,18 @@ public class DerbyConnection {
 	private void createSchema() {
 		try {
 			if(conn==null) throw new Exception();
+			conn.setAutoCommit(false);
 			DatabaseMetaData dmd = conn.getMetaData();
-			ResultSet rs = dmd.getTables(null, "APP", NOTES_TABLE, null);
-			if(!rs.next()) {
+			ResultSet rs = dmd.getTables(null, null, null, new String[] {"TABLE"});
+			if(rs.next()==false) {
 				Statement stmt = conn.createStatement();
 				if(stmt==null) throw new Exception();
 				stmt.executeUpdate("CREATE TABLE " + NOTES_TABLE + 
 						"(" + ID_COLUMN + " int, " + TEXT_COLUMN +" CLOB)");
+				stmt.executeUpdate("INSERT INTO " + NOTES_TABLE + " VALUES(1, '')");
 				stmt.close();
 			}
+			rs.close();
 		}
 		catch(Exception e) {
 			e.printStackTrace(System.err);
@@ -68,7 +71,7 @@ public class DerbyConnection {
 			}
 		}
 		catch(Exception e) {
-			e.printStackTrace(System.err);
+			//e.printStackTrace(System.err);
 		}
 	}
 
