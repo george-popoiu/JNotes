@@ -3,6 +3,7 @@ package com.georgep.jnotes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.util.Random;
@@ -13,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+
+import com.georgep.jnotes.db.NoteAdapter;
 
 public class Note extends JFrame {
 	/**
@@ -26,14 +29,16 @@ public class Note extends JFrame {
 	protected static int dHeight = 300;
 	
 	private NoteModel model;
+	private NoteAdapter adapter;
 	
 	/**
 	 * Builds the UI
 	 * @param model - the NoteModel corresponding to a note
 	 */
-	public Note(NoteModel model) {
+	public Note(NoteModel model, NoteAdapter adapter) {
 		this(model.getID(), model.getText());
 		this.model = model;
+		this.adapter = adapter;
 	}
 	
 	/**
@@ -41,9 +46,7 @@ public class Note extends JFrame {
 	 * @param id - the note's id in the database
 	 * @param text - the note content
 	 */
-	public Note(int id, String text) {
-		model = new NoteModel(id, text);
-		
+	private Note(int id, String text) {
 		setSize(dWidth, dHeight);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
