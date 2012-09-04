@@ -2,18 +2,26 @@ package com.georgep.jnotes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.util.Random;
 
+import javax.print.attribute.standard.MediaSize.NA;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.georgep.jnotes.db.NoteAdapter;
 
@@ -21,12 +29,12 @@ public class Note extends JFrame {
 	/**
 	 * Default frame Width
 	 */
-	protected static int dWidth = 300;
+	protected static int dWidth = 350;
 	
 	/**
 	 * Default frame Height 
 	 */
-	protected static int dHeight = 300;
+	protected static int dHeight = 350;
 	
 	private NoteModel model;
 	private NoteAdapter adapter;
@@ -38,7 +46,7 @@ public class Note extends JFrame {
 	public Note(NoteModel model, NoteAdapter adapter) {
 		this(model.getID(), model.getText());
 		this.model = model;
-		this.adapter = adapter;
+		this.adapter = adapter;		
 	}
 	
 	/**
@@ -48,16 +56,43 @@ public class Note extends JFrame {
 	 */
 	private Note(int id, String text) {
 		setSize(dWidth, dHeight);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				close();
+			}
+		});
 		
 		int sw = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int sh = Toolkit.getDefaultToolkit().getScreenSize().height;
 		Random rand = new Random();
 		int x = rand.nextInt(sw-dWidth);
 		int y = rand.nextInt(sh-dHeight);
-		setLocation(x, y);	
+		setLocation(x, y);
 		
+		textPane.setText(text);
+		changeTitle();
+				
 		buildGUI();
+	}
+	
+	protected void close() {
+		if(adapter.howMany()==1) {
+			adapter.saveNotes();
+			dispose();
+			System.exit(0);
+		}
+		else {
+			int result = JOptionPane.showConfirmDialog(null, 
+						"This will close all the notes. \n Are you sure ?", 
+						"", JOptionPane.YES_NO_OPTION);
+			if(result==JOptionPane.YES_OPTION) {
+				adapter.saveNotes();
+				dispose();
+				System.exit(0);
+			}
+		}
 	}
 	
 	private JPanel buttonPanel = new JPanel();
@@ -79,7 +114,76 @@ public class Note extends JFrame {
 		buttonPanel.add(box);
 		add(buttonPanel, BorderLayout.SOUTH);
 				
-		add(textPane, BorderLayout.CENTER);
+		add(new JScrollPane(textPane), BorderLayout.CENTER);
+		
+		textPane.getDocument().addDocumentListener(listener);
+		textPane.setFont(new Font("SansSerif", Font.BOLD, 14));
+		
+		clearButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clear();
+			}
+		});
+		deleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				delete();
+			}
+		});
+		newButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				newNote();
+			}
+		});
 	}
+	
+	protected void newNote() {
+		new Note(adapter.newNote(), adapter).setVisible(true);
+	}
+	
+	protected void clear() {
+		textPane.setText("");
+	}
+	
+	protected void delete() {
+		if(adapter.howMany()==1) {
+			clear();
+		}
+		else {
+			adapter.removeNote(model);
+			dispose();
+		}
+	}
+	
+	private void changeTitle() {
+		int i = textPane.getText().indexOf('\n');
+		if(i!=-1) {
+			String title = textPane.getText().substring(0, i);
+			setTitle(title);
+		}
+		else {
+			setTitle(textPane.getText());
+		}
+	}
+	
+	private DocumentListener listener = new DocumentListener() {
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			changeTitle();
+			model.setText(textPane.getText());
+		}
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			changeTitle();
+			model.setText(textPane.getText());
+		}
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			changeTitle();
+			model.setText(textPane.getText());
+		}
+	};
 	
 }
