@@ -7,7 +7,7 @@ in Windows 7.
 Important !!
 ============
 
-JNotes.rar contains the executable .jar file as well as the Apache Derby
+JNotes.zip contains the executable .jar file as well as the Apache Derby
 Embedded database files. 
  You must keep JNotes.jar in the same folder as myDB, otherwise the app
 will create another database which takes about 20 seconds.
