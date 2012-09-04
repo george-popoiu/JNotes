@@ -1,15 +1,11 @@
 package com.georgep.jnotes.db;
 
 public class DbConstants {
-	/**
-	 * The database name.
-	 */
-	public static final String DB_NAME = "JNotesDB";
 	
 	/**
 	 * The connection string for the database
 	 */
-	public static final String DB_URL = "jdbc:derby:" + DB_NAME + ";create=true";
+	public static final String DB_URL = "jdbc:derby:myDB;create=true";
 	
 	/**
 	 * The URL for shutting down the database
