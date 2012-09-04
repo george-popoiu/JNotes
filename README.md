@@ -7,6 +7,7 @@ in Windows 7.
 Important !!
 ============
 
+The first connection to the database takes around 20 seconds. Subsequent connections take around 2 seconds.
 JNotes.zip contains the executable .jar file as well as the Apache Derby
 Embedded database files. 
  You must keep JNotes.jar in the same folder as myDB, otherwise the app
