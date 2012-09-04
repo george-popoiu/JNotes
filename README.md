@@ -22,5 +22,3 @@ Software used :
 
   [Apache Derby]: http://db.apache.org/derby/
   [ProgressDialog.java]: http://www.java2s.com/Code/Java/Swing-JFC/Dialogwhichdisplaysindeterminateprogress.htm
-
-A portable and lightweight app for keeping notes similar to StickyNotes in Windows 7.
