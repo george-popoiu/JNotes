@@ -2,6 +2,7 @@ package com.georgep.jnotes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.util.Random;
+import java.util.StringTokenizer;
 
 import javax.print.attribute.standard.MediaSize.NA;
 import javax.swing.Box;
@@ -29,12 +31,12 @@ public class Note extends JFrame {
 	/**
 	 * Default frame Width
 	 */
-	protected static int dWidth = 350;
+	protected static int mWidth = 700;
 	
 	/**
 	 * Default frame Height 
 	 */
-	protected static int dHeight = 350;
+	protected static int mHeight = 700;
 	
 	private NoteModel model;
 	private NoteAdapter adapter;
@@ -49,13 +51,31 @@ public class Note extends JFrame {
 		this.adapter = adapter;		
 	}
 	
+	private Dimension computeSize(String s) {
+		Dimension size = new Dimension();
+		StringTokenizer st = new StringTokenizer(s, "\n");
+		int lines = 0;
+		int linew = 0;
+		while(st.hasMoreElements()) {
+			lines++;
+			linew = Math.max( st.nextToken().length(), linew );
+		}
+		size.setSize(linew*8, lines*26);
+		return size;
+	}
+	
 	/**
 	 * Builds the UI
 	 * @param id - the note's id in the database
 	 * @param text - the note content
 	 */
 	private Note(int id, String text) {
-		setSize(dWidth, dHeight);
+		Dimension d = computeSize(text);
+		int w = d.width;
+		int h = d.height;
+		if(w<350) w = 350;
+		if(h<350) h = 350;
+		setSize(Math.min(w, mWidth), Math.min(h, mHeight));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -67,8 +87,8 @@ public class Note extends JFrame {
 		int sw = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int sh = Toolkit.getDefaultToolkit().getScreenSize().height;
 		Random rand = new Random();
-		int x = rand.nextInt(sw-dWidth);
-		int y = rand.nextInt(sh-dHeight);
+		int x = rand.nextInt(sw-w);
+		int y = rand.nextInt(sh-h);
 		setLocation(x, y);
 		
 		textPane.setText(text);
